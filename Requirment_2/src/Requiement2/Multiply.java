@@ -35,6 +35,13 @@ public class Multiply implements Runnable {
                     System.out.println(formatter);
                 }
             }
+            for (int i = 0; i < C.length; i++) {
+                System.out.println("I am thread : " + Thread.currentThread().getName());
+                for (int j = 0; j < C[0].length / 2; j++) {
+                    System.out.print(C[i][j] + " ");
+                }
+                System.out.println();
+            }
         } else {
             for (int ra = 0; ra < A.length; ra++) {
                 for (int cb = B[0].length / 2; cb < B[0].length; cb++) {
@@ -45,6 +52,13 @@ public class Multiply implements Runnable {
                     formatter.format("Thread : %s calculated c[%d][%d] = %d", Thread.currentThread().getName(), ra, cb, C[ra][cb]);
                     System.out.println(formatter);
                 }
+            }
+            for (int i = 0; i < C.length; i++) {
+                System.out.println("I am thread : " + Thread.currentThread().getName());
+                for (int j = C[0].length / 2; j < C[0].length; j++) {
+                    System.out.print(C[i][j] + " ");
+                }
+                System.out.println();
             }
         }
     }
@@ -100,6 +114,7 @@ public class Multiply implements Runnable {
 
         t1.join();
         t2.join();
+        System.out.println("Matrix C: ");
         printArray(c);
     }
 }
