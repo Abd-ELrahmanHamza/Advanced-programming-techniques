@@ -23,44 +23,53 @@ public class Multiply implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("I am thread : " + Thread.currentThread().getName());
+//        System.out.println("I am thread : " + Thread.currentThread().getName());
         if (Thread.currentThread().getName().equals("1")) {
             for (int ra = 0; ra < A.length; ra++) {
                 for (int cb = 0; cb < B[0].length / 2; cb++) {
                     for (int rc = 0; rc < A[ra].length; rc++) {
                         C[ra][cb] += A[ra][rc] * B[rc][cb];
                     }
-                    Formatter formatter = new Formatter();
-                    formatter.format("Thread : %s calculated c[%d][%d] = %d", Thread.currentThread().getName(), ra, cb, C[ra][cb]);
-                    System.out.println(formatter);
+//                    Formatter formatter = new Formatter();
+//                    formatter.format("Thread : %s calculated c[%d][%d] = %d", Thread.currentThread().getName(), ra, cb, C[ra][cb]);
+//                    System.out.println(formatter);
                 }
             }
-            for (int i = 0; i < C.length; i++) {
-                System.out.println("I am thread : " + Thread.currentThread().getName());
-                for (int j = 0; j < C[0].length / 2; j++) {
-                    System.out.print(C[i][j] + " ");
-                }
-                System.out.println();
-            }
+            printArraySync();
         } else {
             for (int ra = 0; ra < A.length; ra++) {
                 for (int cb = B[0].length / 2; cb < B[0].length; cb++) {
                     for (int rc = 0; rc < A[ra].length; rc++) {
                         C[ra][cb] += A[ra][rc] * B[rc][cb];
                     }
-                    Formatter formatter = new Formatter();
-                    formatter.format("Thread : %s calculated c[%d][%d] = %d", Thread.currentThread().getName(), ra, cb, C[ra][cb]);
-                    System.out.println(formatter);
+//                    Formatter formatter = new Formatter();
+//                    formatter.format("Thread : %s calculated c[%d][%d] = %d", Thread.currentThread().getName(), ra, cb, C[ra][cb]);
+//                    System.out.println(formatter);
                 }
             }
+            printArraySync();
+        }
+    }
+
+    public synchronized void printArraySync() {
+        if (Thread.currentThread().getName().equals("1")) {
+            System.out.println("I am thread : " + Thread.currentThread().getName());
             for (int i = 0; i < C.length; i++) {
-                System.out.println("I am thread : " + Thread.currentThread().getName());
+                for (int j = 0; j < C[0].length / 2; j++) {
+                    System.out.print(C[i][j] + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("I am thread : " + Thread.currentThread().getName());
+            for (int i = 0; i < C.length; i++) {
                 for (int j = C[0].length / 2; j < C[0].length; j++) {
                     System.out.print(C[i][j] + " ");
                 }
                 System.out.println();
             }
         }
+        System.out.println("====================================");
     }
 
     public static void printArray(int[][] arr) {
@@ -104,8 +113,9 @@ public class Multiply implements Runnable {
         System.out.println("====================================");
 
         int[][] c = new int[a.length][b[0].length];
-        Thread t1 = new Thread(new Multiply(a, b, c));
-        Thread t2 = new Thread(new Multiply(a, b, c));
+        Multiply mul = new Multiply(a, b, c);
+        Thread t1 = new Thread(mul);
+        Thread t2 = new Thread(mul);
         t2.setName("2");
         t1.setName("1");
 
