@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Server {
     public static int MAKE_APPOINTMENT = 6666;
@@ -52,7 +53,7 @@ public class Server {
     public static class Hospital extends Thread {
         Socket socket;
         String patientName;
-        List<Doctor> doctors;
+        public static List<Doctor> doctors = new ArrayList<>();
 
         @Override
         public void run() {
@@ -94,8 +95,6 @@ public class Server {
         public Hospital(Socket sock, String patientName) {
             this.socket = sock;
             this.patientName = patientName;
-            doctors = new ArrayList<>();
-            System.out.println("Data read");
             try {
                 File myObj = new File("input.txt");
                 Scanner myReader = new Scanner(myObj);
@@ -108,7 +107,8 @@ public class Server {
                     int s = myReader.nextInt();
                     doctor.patients = new String[s];
                     doctor.timeSlots = new boolean[s];
-                    doctors.add(doctor);
+                    if (doctor.ID >= doctors.size())
+                        doctors.add(doctor);
                 }
                 myReader.close();
             } catch (FileNotFoundException e) {
@@ -145,7 +145,7 @@ public class Server {
                 return "the doctor has an appointment to a different patient name at this timeslot";
             if (doctor.timeSlots[timeSlot]) {
                 doctor.timeSlots[timeSlot] = false;
-                doctor.patients[timeSlot] = "";
+                doctor.patients[timeSlot] = null;
                 return "Cancelling the appointment is done successfully";
             }
             return "the doctor doesn’t have an appointment at this timeslot";
