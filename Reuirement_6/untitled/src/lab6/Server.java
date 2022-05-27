@@ -152,6 +152,7 @@ public class Server {
         }
 
         void print() {
+            System.out.println("Doctors number : " + doctors.size());
             for (Doctor doctor : doctors) {
                 System.out.println("ID: " + doctor.ID);
                 for (int i = 0; i < doctor.timeSlots.length; i++) {
