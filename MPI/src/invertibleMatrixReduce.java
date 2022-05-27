@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class InvertibleMatrix {
+public class invertibleMatrixReduce {
     private static int[] matrix;
 
     public static void main(String[] args) throws IOException {
@@ -18,7 +18,7 @@ public class InvertibleMatrix {
         int root = 0;
         matrix = new int[9];
         int[] sendBuffer = new int[1];
-        int[] receiveBuffer = new int[4];
+        int[] receiveBuffer = new int[1];
 
         // TODO: Read the file by the root
         if (my_rank == root) {
@@ -60,12 +60,12 @@ public class InvertibleMatrix {
             System.out.println("process " + my_rank + " my value is " + sendBuffer[0]);
         }
         // TODO: Gather the values
-        MPI.COMM_WORLD.Gather(sendBuffer, 0, 1, MPI.INT, receiveBuffer, 0, 1, MPI.INT, root);
+        MPI.COMM_WORLD.Reduce(sendBuffer, 0, receiveBuffer, 0, 1, MPI.INT, MPI.SUM, root);
         if (my_rank == root) {
             System.out.println("I am the root & I have received: " + Arrays.toString(receiveBuffer));
 
             // TODO: determine whether the matrix is singular or not
-            int sum = Arrays.stream(receiveBuffer).sum();
+            int sum = receiveBuffer[0];
             if (sum == 0) {
                 System.out.println("The determinant is " + sum + " so the matrix is singular");
             } else {
